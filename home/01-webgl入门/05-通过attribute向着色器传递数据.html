@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>绘制一个点</title>
+    <title>通过 attribute 向着色器传递数据</title>
     <link rel="stylesheet" href="../css/common.css">
 </head>
 <body>
@@ -12,29 +12,6 @@
 <script src="../lib/webgl-debug.js"></script>
 <script src="../lib/cuon-utils.js"></script>
 
-
-<!-- 顶点着色器代码 -->
-<script id="vertexShader" type="x-shader/x-vertex">
-
-    void main() {
-        gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
-        gl_PointSize = 10.0;
-    }
-
-
-
-</script>
-
-<!-- 片元着色器代码 -->
-<script id="fragmentShader" type="x-shader/x-fragment">
-
-    void main() {
-        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-    }
-
-
-
-</script>
 <script>
     (function () {
 
@@ -45,10 +22,17 @@
         var gl = getWebGLContext(canvas);
 
         // 顶点着色器
-        var vertex_shader_source = document.getElementById('vertexShader').innerText;
-
+        var vertex_shader_source = '' +
+            'attribute vec4 a_Position;' +
+            'void main() {' +
+            '   gl_Position = a_Position;' +
+            '   gl_PointSize = 10.0;' +
+            '}';
         // 片元着色器
-        var fragment_shader_source = document.getElementById('fragmentShader').innerText;
+        var fragment_shader_source = '' +
+            'void main() {' +
+            '   gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);' +
+            '}';
 
         // 初始化着色器
         if (!initShaders(gl, vertex_shader_source, fragment_shader_source)) {
@@ -56,13 +40,24 @@
             return false;
         }
 
-        // 预定清除颜色
+        // 获取 attribute 变量 a_Position 的存储地址
+        var a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+
+        if (a_Position < 0) {
+            console.log('获取 a_Position 变量地址失败!');
+            return false;
+        }
+
+        // 将顶点位置传递给 attribute 变量
+        gl.vertexAttrib3f(a_Position, -0.5, 0.5, 0.0);
+
+        // 指定需要清除的颜色
         gl.clearColor(0.0, 0.5, 0.5, 1.0);
 
-        // 清除颜色缓冲区
+        // 清除颜色
         gl.clear(gl.COLOR_BUFFER_BIT);
 
-        // 开始绘制
+        // 绘制顶点
         gl.drawArrays(gl.POINTS, 0, 1);
 
     }());
