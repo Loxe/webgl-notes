@@ -49,7 +49,13 @@
         }
 
         // 将顶点位置传递给 attribute 变量
-        gl.vertexAttrib3f(a_Position, -0.5, 0.5, 0.0);
+        // gl.vertexAttrib1f(a_Position, -0.5);
+        // gl.vertexAttrib2f(a_Position, -0.5, -0.5);
+        // gl.vertexAttrib3f(a_Position, -0.5, -0.5, 0.0);
+        // gl.vertexAttrib4f(a_Position, -0.5, -0.5, 0.0, 1.0);
+
+        var positions = new Float32Array([0.5, 0.0, 0.0, 1.0]);
+        gl.vertexAttrib4fv(a_Position, positions);
 
         // 指定需要清除的颜色
         gl.clearColor(0.0, 0.5, 0.5, 1.0);
