@@ -18,6 +18,7 @@
         // 获取canvas对象
         var canvas = document.getElementById('webgl');
 
+
         // 获取webgl 上下文对象
         var gl = getWebGLContext(canvas);
 
@@ -28,13 +29,10 @@
             '   gl_Position = a_Position;' +
             '   gl_PointSize = 10.0;' +
             '}';
-
         // 片元着色器
         var fragment_shader_source = '' +
-            'precision mediump float;' +
-            'uniform vec4 u_FragColor;' +
             'void main() {' +
-            '   gl_FragColor = u_FragColor;' +
+            '   gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);' +
             '}';
 
         // 初始化着色器
@@ -51,17 +49,9 @@
             return false;
         }
 
-        // 获取 uniform 变量 u_FragColor 的地址
-        var u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
-
-        if (!u_FragColor)  {
-            console.log('获取 u_FragColor 变量地址失败！');
-            return false;
-        }
-
         // 注册 canvas 点击事件
         canvas.onclick = function (ev) {
-            click(ev, gl, canvas, a_Position, u_FragColor);
+            click(ev, gl, canvas, a_Position);
         };
 
         // 指定需要清除的颜色
@@ -72,10 +62,9 @@
 
         // 点数组
         var g_points = [];
-        // 颜色数组
-        var g_colors = [];
 
-        function click(ev, gl, canvas, a_Position, u_FragColor) {
+        function click(ev, gl, canvas, a_Position) {
+            console.log(ev);
 
             // 鼠标点击位置坐标--浏览器客户区中的坐标
             var client_x = ev.clientX;
@@ -93,25 +82,16 @@
             var gl_y = (canvas.height / 2 - canvas_y) / (canvas.height / 2);
 
             // 存储坐标到数组
-            g_points.push([gl_x, gl_y]);
+            g_points.push(gl_x, gl_y);
 
-            // 随机颜色
-            g_colors.push([Math.random(), Math.random(), Math.random(), 1.0]);
-
-            // 清空canvas, 若不去清空canvas，颜色缓冲区会在再次绘制之后被重置为默认的颜色(0.0, 0.0, 0.0, 0.0)
+            // 清空canvas
             gl.clear(gl.COLOR_BUFFER_BIT);
 
             var len = g_points.length;
-            for (var i = 0; i < len; i++) {
-
-                var xy = g_points[i];
-                var rgba = g_colors[i];
+            for (var i = 0; i < len; i += 2) {
 
                 // 将点的位置传递到 attribute 变量
-                gl.vertexAttrib2f(a_Position, xy[0], xy[1]);
-
-                // 将颜色值传递给uniform变量 u_FragColor
-                gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
+                gl.vertexAttrib2f(a_Position, g_points[i], g_points[i+1]);
 
                 // 绘制点
                 gl.drawArrays(gl.POINTS, 0, 1);
