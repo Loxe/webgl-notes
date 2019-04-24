@@ -79,7 +79,7 @@
         // 设置摄像机视点的矩阵
         var viewMatrix = new Matrix4();
 
-        document.onkeydown = function (ev) { keydown(ev, gl, n, u_ViewMatrix, viewMatrix) }
+        document.onkeydown = function (ev) { keydown(ev, gl, n, u_ViewMatrix, viewMatrix) };
 
         draw(gl, n, u_ViewMatrix, viewMatrix);
 
