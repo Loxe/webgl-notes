@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>绘制一个点</title>
     <link rel="stylesheet" href="../css/common.css">
 </head>
+
 <body>
 <canvas id="webgl" width="512" height="512"></canvas>
 </body>
@@ -15,25 +17,17 @@
 
 <!-- 顶点着色器代码 -->
 <script id="vertexShader" type="x-shader/x-vertex">
-
     void main() {
         gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
         gl_PointSize = 10.0;
     }
-
-
-
 </script>
 
 <!-- 片元着色器代码 -->
 <script id="fragmentShader" type="x-shader/x-fragment">
-
     void main() {
         gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
     }
-
-
-
 </script>
 <script>
     (function () {
@@ -69,4 +63,5 @@
 
 
 </script>
+
 </html>

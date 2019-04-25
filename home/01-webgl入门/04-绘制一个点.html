@@ -1,54 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>绘制一个点</title>
     <link rel="stylesheet" href="../css/common.css">
 </head>
-
 <body>
-    <canvas id="webgl" width="512" height="512"></canvas>
+<canvas id="webgl" width="512" height="512"></canvas>
 </body>
 <script src="../lib/webgl-utils.js"></script>
 <script src="../lib/webgl-debug.js"></script>
 <script src="../lib/cuon-utils.js"></script>
 <script>
 
+    // 顶点着色器
+    var vertex_shader_source =
+        'void main() {' +
+        '   gl_Position = vec4(0.0, 0.0, 0.0, 1.0);' + // 设置顶点坐标
+        '   gl_PointSize = 10.0;' + // 设置顶点的大小
+        '' +
+        '}';
+
+    // 片元着色器
+    var fragment_shader_source =
+        'void main(){' +
+        '   gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);' + //设置顶点颜色
+        '}';
+
     (function () {
 
-        // 获取canvas对象
+
+        // 获取 canvas 对象
         var canvas = document.getElementById('webgl');
 
-        // 获取webgl 上下文对象
+        // 获取webgl上下文对象
         var gl = getWebGLContext(canvas);
 
-        // 顶点着色器
-        var VERTEX_SHADER_SOURCE =
-            'void main(){' +
-            '   gl_Position = vec4(0.0, 0.0, 0.0, 1.0);' +//设置顶点坐标
-            '   gl_PointSize = 10.0;' +//设置点的大小
-            '}';
-
-        // 片元着色器
-        var FRAGMENT_SHADER_SOURCE =
-            'void main(){' +
-            '   gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);' +//设置顶点颜色
-            '}';
-
         // 初始化着色器
-        if (!initShader(gl, VERTEX_SHADER_SOURCE, FRAGMENT_SHADER_SOURCE)) {
-            console.log('初始化着色器失败！');
-            return;
+        if (!initShader(gl, vertex_shader_source, fragment_shader_source)) {
+
+            console.log('初始化着色器失败');
+            return false;
+
         }
-        // 预定清除颜色
+
+        // 指定canvas背景颜色
         gl.clearColor(0.0, 0.5, 0.5, 1.0);
 
         // 清除颜色缓冲区
         gl.clear(gl.COLOR_BUFFER_BIT);
 
-        // 开始绘制
         gl.drawArrays(gl.POINTS, 0, 1);
+
 
     }());
 
@@ -88,7 +91,5 @@
     }
 
 
-
 </script>
-
 </html>
