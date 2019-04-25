@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>通过鼠标点击绘制点</title>
     <link rel="stylesheet" href="../css/common.css">
 </head>
+
 <body>
-<canvas id="webgl" width="512" height="512"></canvas>
+    <canvas id="webgl" width="512" height="512"></canvas>
 </body>
 <script src="../lib/webgl-utils.js"></script>
 <script src="../lib/webgl-debug.js"></script>
@@ -17,7 +19,6 @@
 
         // 获取canvas对象
         var canvas = document.getElementById('webgl');
-
 
         // 获取webgl 上下文对象
         var gl = getWebGLContext(canvas);
@@ -31,8 +32,10 @@
             '}';
         // 片元着色器
         var fragment_shader_source = '' +
+            'precision mediump float;' +
+            'uniform vec4 u_FragColor;' +
             'void main() {' +
-            '   gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);' +
+            '   gl_FragColor = u_FragColor;' +
             '}';
 
         // 初始化着色器
@@ -43,6 +46,9 @@
 
         // 获取 attribute 变量 a_Position 的存储地址
         var a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+
+        // 获取 uniform 变量 u_FragColor 的储存地址
+        var u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
 
         if (a_Position < 0) {
             console.log('获取 a_Position 变量地址失败!');
@@ -72,6 +78,7 @@
 
             // 获取canvas 边界框矩形值
             var rect = ev.target.getBoundingClientRect();
+            console.log(rect);
 
             // canvas范围内坐标
             var canvas_x = client_x - rect.left;
@@ -91,7 +98,10 @@
             for (var i = 0; i < len; i += 2) {
 
                 // 将点的位置传递到 attribute 变量
-                gl.vertexAttrib2f(a_Position, g_points[i], g_points[i+1]);
+                gl.vertexAttrib2f(a_Position, g_points[i], g_points[i + 1]);
+
+                // 颜色值传递给 uniform 变量
+                gl.uniform4f(u_FragColor, i * 0.01, i * 0.02, i * 0.03, 1.0);
 
                 // 绘制点
                 gl.drawArrays(gl.POINTS, 0, 1);
@@ -104,4 +114,5 @@
 
 
 </script>
+
 </html>
