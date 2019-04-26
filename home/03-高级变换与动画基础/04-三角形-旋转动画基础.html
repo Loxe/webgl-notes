@@ -103,7 +103,7 @@
 
             // 设置旋转矩阵
             modelMatrix.setRotate(currentAngle, 0, 0, 1);
-            modelMatrix.translate(0.5, 0.5, 0);
+            // modelMatrix.translate(0.5, 0.5, 0);
 
             gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
 
