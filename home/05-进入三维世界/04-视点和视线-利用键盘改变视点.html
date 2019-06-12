@@ -78,22 +78,30 @@
 
         // 设置摄像机视点的矩阵
         var viewMatrix = new Matrix4();
+        
 
         document.onkeydown = function (ev) { keydown(ev, gl, n, u_ViewMatrix, viewMatrix) };
 
-        draw(gl, n, u_ViewMatrix, viewMatrix);
 
         var g_eyeX = 0.20, g_eyeY = 0.25, g_eyeZ = 0.25;
+
+        draw(gl, n, u_ViewMatrix, viewMatrix);
+        
         function keydown(ev, gl, n, u_ViewMatrix, viewMatrix) {
 
-            console.log(ev);
+
+            if(ev.keyCode == 39){
+                g_eyeX += 0.02;
+            }else if(ev.keyCode == 37){
+                g_eyeX -= 0.02;
+            }
 
             draw(gl, n, u_ViewMatrix, viewMatrix);
 
         }
 
         function draw(gl, n, u_ViewMatrix, viewMatrix) {
-
+        
             viewMatrix.setLookAt(g_eyeX, g_eyeY, g_eyeZ, 0, 0, 0, 0, 1, 0);
             gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
 
