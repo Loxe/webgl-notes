@@ -129,9 +129,8 @@
 
             // 获取当前旋转角度
             currentAngle = getCurrentAngle(currentAngle);
-            console.log(currentAngle);
 
-            modelMatrix.setRotate(currentAngle, 0, 1, 0);
+            modelMatrix.setRotate(-currentAngle, 0, 1, 0);
             mvpMatrix.set(vpMatrix).multiply(modelMatrix);
             gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
 
