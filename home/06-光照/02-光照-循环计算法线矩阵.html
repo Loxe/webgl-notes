@@ -135,8 +135,8 @@
             gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
 
             // 设置灯光的矩阵变换
-            normalMatrix.setInverseOf(modelMatrix);
-            normalMatrix.transpose();
+            normalMatrix.setInverseOf(modelMatrix);// 让normalMatrix 称为矩阵 modelMatrix 的逆矩阵
+            normalMatrix.transpose(); // 对矩阵自身进行操作，并将自身设置为转置后的结果
             gl.uniformMatrix4fv(u_NormalMatrix, false, normalMatrix.elements);
 
             // 清空颜色和深度缓冲区
