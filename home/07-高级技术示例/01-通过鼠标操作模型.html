@@ -119,35 +119,17 @@
         var modelMatrix = new Matrix4(); // 模型矩阵
         var mvpMatrix = new Matrix4(); // 模型视图矩阵
         var normalMatrix = new Matrix4();// 法向量变换矩阵
-
-        // 计算模型矩阵并设置旋转角度和旋转轴
-        // modelMatrix.setRotate(-14, 0, 1, 0);
-
         var vpMatrix = new Matrix4();
 
-        // 将计算后的矩阵数据传递给顶点着色器
-        gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
-
         // 设置正射投影可是区域
-        vpMatrix.setPerspective(30, 1, 1, 100);
-        vpMatrix.lookAt(0, 0, 7, 0, 0, 0, 0, 1, 0);
-        
+        vpMatrix.setPerspective(45, 1, 1, 1000);
+        vpMatrix.lookAt(0, 0, 14, 0, 0, 0, 0, 1, 0);
+
         vpMatrix.multiply(modelMatrix);
 
         mvpMatrix.set(vpMatrix).multiply(modelMatrix);
 
         gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
-
-        // 让 normalMatrix 成为 modelMatrix的逆转阵
-        normalMatrix.setInverseOf(modelMatrix);
-        // 对矩阵自身进行草走，并将自身设置为转置后的结果
-        normalMatrix.transpose();
-        gl.uniformMatrix4fv(u_NormalMatrix, false, normalMatrix.elements);
-
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-        gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);
-
 
         // 添加鼠标事件监听
         var currentAngle = [0.0, 0.0];
@@ -160,20 +142,13 @@
 
             mvpMatrix.set(vpMatrix).multiply(modelMatrix);
 
-            // 如果把灯光和视图以及模型矩阵一起旋转则使用
+            // 如果把灯光和视图以及模型矩阵一起旋转则使用 mvpMatrix
             // mvpMatrix.rotate(currentAngle[0], 1.0, 0.0, 0.0);
             // mvpMatrix.rotate(currentAngle[1], 0.0, 1.0, 0.0);
 
             gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
 
-            // 设置灯光的逆转置矩阵，让modelMatrix 转成为modelMatrix 的逆矩阵
-            normalMatrix.setInverseOf(modelMatrix);
-            normalMatrix.transpose();
-            gl.uniformMatrix4fv(u_NormalMatrix, false, normalMatrix.elements);
-
-            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-            gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);
+            renderer();
 
             requestAnimationFrame(animate, canvas);
 
@@ -181,15 +156,23 @@
 
         animate();
 
+        // 滑轮缩放处理
         canvas.addEventListener('wheel', onMouseWheel, false);
 
         function onMouseWheel(event) {
-            
-            vpMatrix.translate(0.0, 0.0, event.deltaY*0.001);
+
+            vpMatrix.translate(0.0, 0.0, -event.deltaY * 0.004);
 
             mvpMatrix.set(vpMatrix).multiply(modelMatrix);
 
             gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
+
+            renderer();
+
+        }
+
+        // 重新绘制
+        function renderer() {
 
             // 设置灯光的逆转置矩阵，让modelMatrix 转成为modelMatrix 的逆矩阵
             normalMatrix.setInverseOf(modelMatrix);
@@ -314,6 +297,7 @@
 
         // 添加鼠标事件监听处理
         function initEventHandles(domElement, currentAngle) {
+
             var dragging = false;
 
             var lastX = -1;
@@ -329,44 +313,37 @@
             domElement.onmousedown = function (event) {
 
                 event.preventDefault();
-                event.stopPropagation();
-
-                console.log(event);
 
                 // 鼠标点击位置
                 var x = event.clientX;
                 var y = event.clientY;
 
-                // 返回元素的大小及相对于视口的位置
-                var rect = event.target.getBoundingClientRect();
+                lastX = x;
+                lastY = y;
 
-                // 判断点击位置是在视口范围内 ---?? 有必要 ??
-                if (rect.left <= x && x < rect.right &&
-                    rect.top <= y && y < rect.bottom) {
-                    console.log('ok');
+                dragging = true;
 
-                    lastX = x;
-                    lastY = y;
+            }
 
-                    dragging = true;
+            domElement.onmouseleave = function (event) {
 
-                }
+                event.preventDefault();
+                dragging = false;
 
             }
 
             // 鼠标抬起事件
             domElement.onmouseup = function (event) {
-                event.preventDefault();
-                event.stopPropagation();
 
+                event.preventDefault();
                 dragging = false;
+                
             }
 
             // 鼠标移动事件
             domElement.onmousemove = function (event) {
 
                 event.preventDefault();
-                event.stopPropagation();
 
                 var x = event.clientX, y = event.clientY;
 
@@ -378,9 +355,6 @@
                     var dx = factor * (x - lastX);
                     var dy = factor * (y - lastY);
 
-                    console.log(factor);
-
-
                     // 限制 x轴的旋转角度 -90 --- 90
                     currentAngle[0] = Math.max(Math.min(currentAngle[0] + dy, 90.0), -90.0)
                     currentAngle[1] = currentAngle[1] + dx;
@@ -391,7 +365,6 @@
             }
 
         }
-
 
     }())
 
