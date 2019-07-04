@@ -4,17 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <title>webgl-example</title>
-    <link rel="stylesheet" href="../css/common.css">
 </head>
 
 <body>
-    <canvas id="webgl" width="512" height="512"></canvas>
+    <canvas id="webgl" width="512" height="512" style="position: absolute; z-index: 0;margin: 0 auto;"></canvas>
+    <canvas id="hud" width="512" height="512" style="position: absolute;z-index: 1;"></canvas>
 </body>
 <script src="../lib/webgl-utils.js"></script>
 <script src="../lib/webgl-debug.js"></script>
 <script src="../lib/cuon-utils.js"></script>
 <script src="../lib/cuon-matrix.js"></script>
-<script src=""></script>
 
 <script>
 
@@ -60,15 +59,19 @@
     (function () {
 
         var canvas = document.getElementById('webgl');
+        var hud = document.getElementById('hud');
 
         var gl = getWebGLContext(canvas);
+        var ctx = hud.getContext('2d');
 
-        if (!gl) {
+        if (!gl || !ctx) {
 
-            console.log('不能获取webgl 上下文');
+            console.log('不能获取上下文对象');
             return false;
 
         }
+
+
 
         // 初始化渲染器
         if (!initShaders(gl, v_shader_source, f_shader_source)) {
@@ -122,13 +125,32 @@
             currentAngle = getCurrentAngle(currentAngle);
 
             draw(gl, n, currentAngle, viewProjMatrix, u_MvpMatrix);
+            draw2D(ctx, currentAngle);
 
         }
 
         animate();
 
+        function draw2D(ctx, currentAngle) {
+            ctx.clearRect(0, 0, 512, 512); // Clear <hud>
+            // Draw triangle with white lines
+            ctx.beginPath();                      // Start drawing
+            ctx.moveTo(60, 5);
+            ctx.lineTo(100, 75);
+            ctx.lineTo(20, 75);
+            ctx.closePath();
+            
+            ctx.strokeStyle = 'rgba(100, 255, 255, 1)'; // Set white to color of lines
+            ctx.stroke();                           // Draw Triangle with white lines
+            // Draw white letters
+            ctx.font = '15px "Times New Roman"';
+            ctx.fillStyle = 'rgba(100, 255, 255, 1)'; // Set white to the color of letters
+            ctx.fillText('HUD: Head Up Display', 15, 100);
+            ctx.fillText('Current Angle: ' + Math.floor(currentAngle), 15, 120);
+        }
+
         // 鼠标点击事件
-        canvas.onmousedown = function (event) {
+        hud.onmousedown = function (event) {
 
             var x = event.clientX;
             var y = event.clientY;
@@ -142,7 +164,7 @@
 
             if (picked) {
 
-                console.log('选中模型'); 
+                console.log('选中模型');
                 // 设置清楚颜色
                 gl.clearColor(Math.random(), Math.random(), Math.random(), Math.random());
 
@@ -167,7 +189,7 @@
             }
 
             gl.uniform1i(u_Clicked, 0);
-            
+
             draw(gl, n, currentAngle, viewProjMatrix, u_MvpMatrix);
 
             return picked;
