@@ -25,31 +25,18 @@
 
 <script>
 
-    var fileLoader = new FileLoader();
 
-    fileLoader.load('./08.single_fragment_shader.glsl',function (response) {
-        console.log(response);
+    var GLSLLoader = new GLSLLoader();
+
+    var urls = [
+        './GLSL/08.single_fragment_shader.glsl',
+        './GLSL/08.single_vertex_shader.glsl'
+    ]
+
+    GLSLLoader.loadAll(urls, function (res) {
+        console.log(res);
     })
 
-    console.log(fileLoader);
-
-    // 顶点着色器
-    var v_shader_source = '' +
-        'attribute vec4 a_Position;' +
-        'attribute vec4 a_Color;' +
-        'uniform mat4 u_MvpMatrix;' +
-        'varying vec4 v_Color;' +
-        'void main(){' +
-        '   gl_Position = u_MvpMatrix * a_Position;' +
-        '   v_Color = a_Color;' +
-        '}';
-    // 片元着色器
-    var f_shader_source = '' +
-        'precision mediump float;' +
-        'varying vec4 v_Color;' +
-        'void main(){' +
-        '   gl_FragColor = v_Color;' +
-        '}';
 </script>
 
 </html>
