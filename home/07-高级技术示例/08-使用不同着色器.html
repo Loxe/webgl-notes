@@ -35,8 +35,7 @@
         './GLSL/08.texture_vertex_shader.glsl'
     ]
 
-    GLSLLoader.loadArray(shaders, function (res) {
-        console.log(res);
+    GLSLLoader.loadArrays(shaders, function (res) {
 
         var single_fragment_shader = res.findShader('single_fragment_shader');
         var single_vertex_shader = res.findShader('sss');

@@ -3,7 +3,7 @@
 var GLSLLoader = function () {
 
 	// 加载单个着色器文件
-	this.load = function (url) {
+	this.loadShader = function (url) {
 
 		return new Promise(function (resolve, reject) {
 
@@ -21,7 +21,8 @@ var GLSLLoader = function () {
 
 	}
 
-	this.loadArray = function (arrays, onload) {
+	// 加载文件数组
+	this.loadArrays = function (arrays, onload) {
 
 		if (!(arrays instanceof Array)) {
 			console.warn('variable is not Array');
@@ -31,7 +32,7 @@ var GLSLLoader = function () {
 
 		arrays.forEach(values => {
 
-			scope.load(values).then(data => {
+			scope.loadShader(values).then(data => {
 
 				// 以对象的形式返回着色器代码
 				results.push({
@@ -49,7 +50,7 @@ var GLSLLoader = function () {
 	}
 
 	// 加载两个着色器文件
-	this.loadAll = function (urls, onLoad, onError) {
+	this.loadVertexFragment = function (urls, onLoad, onError) {
 
 		var shader = {};
 
@@ -61,7 +62,7 @@ var GLSLLoader = function () {
 
 		urls.forEach(values => {
 
-			scope.load(values).then(function (data) {
+			scope.loadShader(values).then(function (data) {
 
 				var fragment = data.includes('gl_FragColor');
 
@@ -133,8 +134,8 @@ Array.prototype.findShader = function (shader_name) {
 
 	})
 
-	object = object !== undefined ? object :{shader:null};
-	
+	object = object !== undefined ? object : { shader: null };
+
 	return object.shader;
 
 }
