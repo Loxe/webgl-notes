@@ -133,7 +133,7 @@ Array.prototype.findShader = function (shader_name) {
 
 	})
 
-	object !== undefined ? object :{shader:undefined};
+	object = object !== undefined ? object :{shader:null};
 	
 	return object.shader;
 
