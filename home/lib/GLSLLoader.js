@@ -21,6 +21,38 @@ var GLSLLoader = function () {
 
 	}
 
+	this.loadArray = function (arrays, onload, onError) {
+
+		if (!(arrays instanceof Array)) {
+			console.warn('variable is not Array');
+		}
+
+		var results = [];
+
+		arrays.forEach(values => {
+
+			var name_end = values.indexOf('.glsl');
+
+			var name = values.substring(0, name_end);
+
+			scope.load(values).then(data => {
+
+				// 以对象的形式返回着色器代码
+				results.push({
+					name:name,
+					shader:data
+				});
+
+				if (results.length === arrays.length) {
+					onload(results);			
+				}
+
+			})
+
+		})
+
+	}
+
 	// 加载两个着色器文件
 	this.loadAll = function (urls, onLoad, onError) {
 
