@@ -28,16 +28,6 @@
 
     var GLSLLoader = new GLSLLoader();
 
-    var single_shaders = [
-        './GLSL/08.single_fragment_shader.glsl',
-        './GLSL/08.single_vertex_shader.glsl'
-    ];
-
-    var texture_shader = [
-        './GLSL/08.texture_fragment_shader.glsl',
-        './GLSL/08.texture_vertex_shader.glsl'
-    ];
-
     var shaders = [
         './GLSL/08.single_fragment_shader.glsl',
         './GLSL/08.single_vertex_shader.glsl',
@@ -47,14 +37,13 @@
 
     GLSLLoader.loadArray(shaders, function (res) {
         console.log(res);
-    })
+        
+        var single_fragment_shader = res.findShader('single_fragment_shader');
+        var single_vertex_shader = res.findShader('single_vertex_shader');
 
-    GLSLLoader.loadAll(single_shaders, function (shader) {
-        console.log(shader);
-    })
+        console.log(single_fragment_shader);
+        console.log(single_vertex_shader);
 
-    GLSLLoader.loadAll(texture_shader, function (shader) {
-        console.log(shader);
     })
 
 </script>

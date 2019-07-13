@@ -21,7 +21,7 @@ var GLSLLoader = function () {
 
 	}
 
-	this.loadArray = function (arrays, onload, onError) {
+	this.loadArray = function (arrays, onload) {
 
 		if (!(arrays instanceof Array)) {
 			console.warn('variable is not Array');
@@ -31,20 +31,15 @@ var GLSLLoader = function () {
 
 		arrays.forEach(values => {
 
-			var name_end = values.indexOf('.glsl');
-
-			var name = values.substring(0, name_end);
-
 			scope.load(values).then(data => {
 
 				// 以对象的形式返回着色器代码
 				results.push({
-					name:name,
-					shader:data
+					name: values, shader: data
 				});
 
 				if (results.length === arrays.length) {
-					onload(results);			
+					onload(results);
 				}
 
 			})
@@ -126,5 +121,20 @@ var GLSLLoader = function () {
 		xhr.send(null);
 
 	}
+
+}
+
+// 依据文件名查找着色器代码
+Array.prototype.findShader = function (shader_name) {
+
+	var object = this.find(value => {
+
+		return value.name.includes(shader_name);
+
+	})
+
+	object !== undefined ? object :{shader:''};
+	
+	return object.shader;
 
 }
