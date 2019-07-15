@@ -10,7 +10,7 @@ varying vec2 v_TexCoord;
 
 void main(){
 
-    vec3 lightDirection vec3(0.0, 0.0, 1.0);// 灯光位置在世界坐标系中
+    vec3 lightDirection = vec3(0.0, 0.0, 1.0);// 灯光位置在世界坐标系中
     gl_Position = u_MvpMatrix * a_Position; // 计算后的顶点坐标
     vec3 normal = normalize(vec3(u_NormalMatrix * a_Normal));
     v_NdotL = max(dot(normal, lightDirection), 0.0);
