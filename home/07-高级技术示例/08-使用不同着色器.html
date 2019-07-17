@@ -242,9 +242,7 @@
             gl.bindTexture(gl.TEXTURE_2D, null);
         }
 
-        image.src = '../resources/orange.JPG';
-
-
+        image.src = '../resources/ubuntu.jpg';
 
         return texture;
 
@@ -294,7 +292,7 @@
         g_mvpMatrix.multiply(g_modelMatrix);
         gl.uniformMatrix4fv(program.u_MvpMatrix, false, g_mvpMatrix.elements);
 
-        gl.drawElements(gl.TRANGLES, obj.numIndices, obj.indexBuffer.type, 0);
+        gl.drawElements(gl.TRIANGLES, obj.numIndices, obj.indexBuffer.type, 0);
 
     }
 
