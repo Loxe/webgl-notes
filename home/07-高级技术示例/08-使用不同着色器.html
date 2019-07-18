@@ -250,24 +250,31 @@
 
     function drawSingleCube(gl, program, obj, x, angle, viewProjMatrix) {
 
+        // 使用这个程序对象
         gl.useProgram(program);
 
+        // 分配缓冲区对象并开启attribute变量
         initAttributeVariable(gl, program.a_Position, obj.vertexBuffer);
         initAttributeVariable(gl, program.a_Normal, obj.normalBuffer);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.indexBuffer);
 
+        // 开始绘制
         drawCube(gl, program, obj, x, angle, viewProjMatrix)
 
     }
 
     function drawTexCube(gl, program, obj, texture, x, angle, viewProjMatrix) {
+
+        // 使用这个缓冲区对象
         gl.useProgram(program);
 
+        // 分配缓冲区对象并开启attribute变量
         initAttributeVariable(gl, program.a_Position, obj.vertexBuffer);
         initAttributeVariable(gl, program.a_Normal, obj.normalBuffer);
         initAttributeVariable(gl, program.a_TexCoord, obj.texCoordBuffer);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.indexBuffer);
 
+        //激活并将纹理对象绑定到0号纹理单元
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, texture);
 
@@ -280,14 +287,17 @@
 
     function drawCube(gl,  program, obj, x, angle, viewProjMatrix) {
 
+        // 计算模型矩阵
         g_modelMatrix.setTranslate(x, 0.0, 0.0);
         g_modelMatrix.rotate(20.0, 1.0, 0.0, 0.0);
         g_modelMatrix.rotate(angle, 0.0, 1.0, 0.0);
 
+        // 计算法线变换矩阵
         g_normalMatrix.setInverseOf(g_modelMatrix);
         g_normalMatrix.transpose();
         gl.uniformMatrix4fv(program.u_NormalMatrix, false, g_normalMatrix.elements);
 
+        // 计算模型视图投影矩阵
         g_mvpMatrix.set(viewProjMatrix);
         g_mvpMatrix.multiply(g_modelMatrix);
         gl.uniformMatrix4fv(program.u_MvpMatrix, false, g_mvpMatrix.elements);
