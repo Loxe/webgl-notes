@@ -88,6 +88,9 @@
 
         gl.enable(gl.DEPTH_TEST);
 
+        // 隐藏消除功能
+        gl.enable(gl.CULL_FACE);
+
         var viewProjMatrix = new Matrix4();
         viewProjMatrix.setPerspective(30, canvas.width / canvas.height, 1.0, 100.0);
         viewProjMatrix.lookAt(0.0, 0.0, 7.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
@@ -383,7 +386,7 @@
         var buffer = gl.createBuffer();
 
         if (!buffer) {
-            
+
             console.log('failed to create the buffer object');
             return null;
 
