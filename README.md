@@ -7,4 +7,5 @@ https://ithanmang.gitee.io/webgl-notes/
 #### 3、博客地址
 https://blog.csdn.net/ithanmang
 
-
+#### 4、引用自
+https://gitee.com/ithanmang/webgl-notes
